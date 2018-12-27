@@ -205,6 +205,3 @@ WHERE
   )
 ORDER BY date(concat(a.end_date_year, '-', a.end_date_month, '-', a.end_date_day))
 
-
-
-
