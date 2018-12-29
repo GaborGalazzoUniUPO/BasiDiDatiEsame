@@ -61,18 +61,22 @@ FROM (
        INNER JOIN
      label lbl2
      ON src.l2 = lbl2.id
+
+
 WHERE EXISTS
         (
-          SELECT *
+          SELECT DISTINCT rl1.label, rl2.label, rl3.label
           FROM release_label rl1,
                release_label rl2,
-               release_label rl3
-          WHERE rl1.label < rl2.label
-            AND rl2.label < rl3.label
-            AND rl1.release = l1
-            AND rl2.release = l2
+               release_label rl3,
+               release_label rl4
+          WHERE
+            rl1.label = l1
+            AND rl2.label = l2
+            and rl1.release = rl3.release
+            AND rl2.release = rl4.release
+            and rl3.label = rl4.label
         )
-;
 
 /* Query 13:
 Trovare il nome e la lunghezza della traccia più lunga appartenente
@@ -144,12 +148,12 @@ Trovare le release e le tracce il cui nome contiene
 il nome di un'area (il risultato deve contenere solo il
 nome della release o della traccia, rinominato come "Nome").
 */
-SELECT t.name
+SELECT t.name as name
 FROM track t,
      area a
 WHERE t.name LIKE '%' || a.name || '%'
 UNION
-SELECT r.name
+SELECT r.name as name
 FROM release r,
      area a
 WHERE r.name LIKE '%' || a.name || '%'
